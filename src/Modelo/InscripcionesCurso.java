@@ -6,6 +6,9 @@ package Modelo;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
+import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -36,16 +39,26 @@ public class InscripcionesCurso implements Serializable {
     @JoinColumn(name = "idcurso", referencedColumnName = "identificador", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Curso curso;
+    @Basic(optional = false)
+    @Column(name = "resultado")
+    private String resultado;
+    @Basic(optional = false)
+    @Column(name = "nota")
+    private int nota;
 
     public InscripcionesCurso() {
     }
 
-    public InscripcionesCurso(InscripcionesCursoPK inscripcionesCursoPK) {
+    public InscripcionesCurso(InscripcionesCursoPK inscripcionesCursoPK, Alumno alumno, Curso curso, String resultado, int nota) {
         this.inscripcionesCursoPK = inscripcionesCursoPK;
+        this.alumno = alumno;
+        this.curso = curso;
+        this.resultado = resultado;
+        this.nota = nota;
     }
 
-    public InscripcionesCurso(int idalumno, int idcurso, Date fechainscripcion) {
-        this.inscripcionesCursoPK = new InscripcionesCursoPK(idalumno, idcurso, fechainscripcion);
+    public InscripcionesCurso(InscripcionesCursoPK inscripcionesCursoPK) {
+        this.inscripcionesCursoPK = inscripcionesCursoPK;
     }
 
     public InscripcionesCursoPK getInscripcionesCursoPK() {
@@ -54,6 +67,22 @@ public class InscripcionesCurso implements Serializable {
 
     public void setInscripcionesCursoPK(InscripcionesCursoPK inscripcionesCursoPK) {
         this.inscripcionesCursoPK = inscripcionesCursoPK;
+    }
+
+    public String getResultado() {
+        return resultado;
+    }
+
+    public void setResultado(String resultado) {
+        this.resultado = resultado;
+    }
+
+    public int getNota() {
+        return nota;
+    }
+
+    public void setNota(int nota) {
+        this.nota = nota;
     }
 
     public Alumno getAlumno() {
@@ -74,19 +103,40 @@ public class InscripcionesCurso implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (inscripcionesCursoPK != null ? inscripcionesCursoPK.hashCode() : 0);
+        int hash = 7;
+        hash = 89 * hash + Objects.hashCode(this.inscripcionesCursoPK);
+        hash = 89 * hash + Objects.hashCode(this.alumno);
+        hash = 89 * hash + Objects.hashCode(this.curso);
+        hash = 89 * hash + Objects.hashCode(this.resultado);
+        hash = 89 * hash + this.nota;
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof InscripcionesCurso)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        InscripcionesCurso other = (InscripcionesCurso) object;
-        if ((this.inscripcionesCursoPK == null && other.inscripcionesCursoPK != null) || (this.inscripcionesCursoPK != null && !this.inscripcionesCursoPK.equals(other.inscripcionesCursoPK))) {
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final InscripcionesCurso other = (InscripcionesCurso) obj;
+        if (this.nota != other.nota) {
+            return false;
+        }
+        if (!Objects.equals(this.resultado, other.resultado)) {
+            return false;
+        }
+        if (!Objects.equals(this.inscripcionesCursoPK, other.inscripcionesCursoPK)) {
+            return false;
+        }
+        if (!Objects.equals(this.alumno, other.alumno)) {
+            return false;
+        }
+        if (!Objects.equals(this.curso, other.curso)) {
             return false;
         }
         return true;
@@ -94,7 +144,7 @@ public class InscripcionesCurso implements Serializable {
 
     @Override
     public String toString() {
-        return "Modelo.InscripcionesCurso[ inscripcionesCursoPK=" + inscripcionesCursoPK + " ]";
+        return "InscripcionesCurso{" + "inscripcionesCursoPK=" + inscripcionesCursoPK + ", alumno=" + alumno + ", curso=" + curso + ", resultado=" + resultado + ", nota=" + nota + '}';
     }
-    
+
 }

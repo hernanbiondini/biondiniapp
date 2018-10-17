@@ -15,23 +15,40 @@ import Modelo.InscripcionesCurso;
 import Modelo.InscripcionesCursoPK;
 import controller.exceptions.NonexistentEntityException;
 import controller.exceptions.PreexistingEntityException;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 
 /**
  *
  * @author hernanbiondini
  */
-public class InscripcionesCursoJpaController implements Serializable {
+public class InscripcionesCursoJpaController extends EntityController implements Serializable {
 
-    public InscripcionesCursoJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    private static InscripcionesCursoJpaController inscripcionesCursoJpaController;
+    private static final String CURSO_POR_ID_FECHA = "InscripcionesCurso.findByIdcursoFechainscripcion";
+
+    private InscripcionesCursoJpaController() {
     }
-    private EntityManagerFactory emf = null;
 
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
+    public static InscripcionesCursoJpaController getInstance() {
+        if (inscripcionesCursoJpaController == null) {
+            inscripcionesCursoJpaController = new InscripcionesCursoJpaController();
+        }
+        return inscripcionesCursoJpaController;
+    }
+
+    protected List executeNamedQuery(String queryName) {
+        EntityManager em = this.getEntityManager();
+        List resultList = this.executeNamedQuery(queryName, em);
+        em.close();
+        return resultList;
+    }
+
+    protected List executeNamedQuery(String queryName, EntityManager em) {
+        javax.persistence.Query query = em.createNamedQuery(queryName);
+        List resultList = query.getResultList();
+        return resultList;
     }
 
     public void create(InscripcionesCurso inscripcionesCurso) throws PreexistingEntityException, Exception {
@@ -206,5 +223,18 @@ public class InscripcionesCursoJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    public List<InscripcionesCurso> getPorIdCursoYFecha2() {
+        return this.executeNamedQuery(CURSO_POR_ID_FECHA);
+    }
+
+    public List<InscripcionesCurso> getPorIdCursoYFecha(Integer id, Date fechaComienzoCurso) {
+        System.out.println("controller " + id);
+        EntityManager em = this.getEntityManager();
+        Query q = (Query) em.createQuery("SELECT i FROM InscripcionesCurso i WHERE i.inscripcionesCursoPK.idcurso = ?1 and i.inscripcionesCursoPK.fechaInicio = ?2");
+        q.setParameter(1, id);
+        q.setParameter(2, fechaComienzoCurso);
+        List<InscripcionesCurso> al = q.getResultList();
+        return al;
+    }
 }

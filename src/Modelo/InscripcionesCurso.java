@@ -16,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -25,9 +27,10 @@ import javax.persistence.Table;
 @Table(name = "inscripciones_curso")
 @NamedQueries({
     @NamedQuery(name = "InscripcionesCurso.findAll", query = "SELECT i FROM InscripcionesCurso i")
-    , @NamedQuery(name = "InscripcionesCurso.findByIdalumno", query = "SELECT i FROM InscripcionesCurso i WHERE i.inscripcionesCursoPK.idalumno = :idalumno")
-    , @NamedQuery(name = "InscripcionesCurso.findByIdcurso", query = "SELECT i FROM InscripcionesCurso i WHERE i.inscripcionesCursoPK.idcurso = :idcurso")
-    , @NamedQuery(name = "InscripcionesCurso.findByFechainscripcion", query = "SELECT i FROM InscripcionesCurso i WHERE i.inscripcionesCursoPK.fechainscripcion = :fechainscripcion")})
+        , @NamedQuery(name = "InscripcionesCurso.findByIdalumno", query = "SELECT i FROM InscripcionesCurso i WHERE i.inscripcionesCursoPK.idalumno = :idalumno")
+        , @NamedQuery(name = "InscripcionesCurso.findByIdcurso", query = "SELECT i FROM InscripcionesCurso i WHERE i.inscripcionesCursoPK.idcurso = :idcurso")
+})
+
 public class InscripcionesCurso implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -45,20 +48,21 @@ public class InscripcionesCurso implements Serializable {
     @Basic(optional = false)
     @Column(name = "nota")
     private int nota;
+    @Basic(optional = false)
+    @Column(name = "fechainscripcion")
+    @Temporal(TemporalType.DATE)
+    private Date fechaInscripcion;
 
     public InscripcionesCurso() {
     }
 
-    public InscripcionesCurso(InscripcionesCursoPK inscripcionesCursoPK, Alumno alumno, Curso curso, String resultado, int nota) {
+    public InscripcionesCurso(InscripcionesCursoPK inscripcionesCursoPK, Alumno alumno, Curso curso, String resultado, int nota, Date fechaInscripcion) {
         this.inscripcionesCursoPK = inscripcionesCursoPK;
         this.alumno = alumno;
         this.curso = curso;
         this.resultado = resultado;
         this.nota = nota;
-    }
-
-    public InscripcionesCurso(InscripcionesCursoPK inscripcionesCursoPK) {
-        this.inscripcionesCursoPK = inscripcionesCursoPK;
+        this.fechaInscripcion = fechaInscripcion;
     }
 
     public InscripcionesCursoPK getInscripcionesCursoPK() {
@@ -67,22 +71,6 @@ public class InscripcionesCurso implements Serializable {
 
     public void setInscripcionesCursoPK(InscripcionesCursoPK inscripcionesCursoPK) {
         this.inscripcionesCursoPK = inscripcionesCursoPK;
-    }
-
-    public String getResultado() {
-        return resultado;
-    }
-
-    public void setResultado(String resultado) {
-        this.resultado = resultado;
-    }
-
-    public int getNota() {
-        return nota;
-    }
-
-    public void setNota(int nota) {
-        this.nota = nota;
     }
 
     public Alumno getAlumno() {
@@ -101,6 +89,30 @@ public class InscripcionesCurso implements Serializable {
         this.curso = curso;
     }
 
+    public String getResultado() {
+        return resultado;
+    }
+
+    public void setResultado(String resultado) {
+        this.resultado = resultado;
+    }
+
+    public int getNota() {
+        return nota;
+    }
+
+    public void setNota(int nota) {
+        this.nota = nota;
+    }
+
+    public Date getFechaInscripcion() {
+        return fechaInscripcion;
+    }
+
+    public void setFechaInscripcion(Date fechaInscripcion) {
+        this.fechaInscripcion = fechaInscripcion;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -109,6 +121,7 @@ public class InscripcionesCurso implements Serializable {
         hash = 89 * hash + Objects.hashCode(this.curso);
         hash = 89 * hash + Objects.hashCode(this.resultado);
         hash = 89 * hash + this.nota;
+        hash = 89 * hash + Objects.hashCode(this.fechaInscripcion);
         return hash;
     }
 
@@ -139,12 +152,15 @@ public class InscripcionesCurso implements Serializable {
         if (!Objects.equals(this.curso, other.curso)) {
             return false;
         }
+        if (!Objects.equals(this.fechaInscripcion, other.fechaInscripcion)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "InscripcionesCurso{" + "inscripcionesCursoPK=" + inscripcionesCursoPK + ", alumno=" + alumno + ", curso=" + curso + ", resultado=" + resultado + ", nota=" + nota + '}';
+        return "InscripcionesCurso{" + "inscripcionesCursoPK=" + inscripcionesCursoPK + ", alumno=" + alumno + ", curso=" + curso + ", resultado=" + resultado + ", nota=" + nota + ", fechaInscripcion=" + fechaInscripcion + '}';
     }
 
 }

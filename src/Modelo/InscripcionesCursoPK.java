@@ -6,6 +6,7 @@ package Modelo;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -26,17 +27,17 @@ public class InscripcionesCursoPK implements Serializable {
     @Column(name = "idcurso")
     private int idcurso;
     @Basic(optional = false)
-    @Column(name = "fechainscripcion")
+    @Column(name = "fechainicio")
     @Temporal(TemporalType.DATE)
-    private Date fechainscripcion;
+    private Date fechaInicio;
 
     public InscripcionesCursoPK() {
     }
 
-    public InscripcionesCursoPK(int idalumno, int idcurso, Date fechainscripcion) {
+    public InscripcionesCursoPK(int idalumno, int idcurso, Date fechaInicio) {
         this.idalumno = idalumno;
         this.idcurso = idcurso;
-        this.fechainscripcion = fechainscripcion;
+        this.fechaInicio = fechaInicio;
     }
 
     public int getIdalumno() {
@@ -55,37 +56,42 @@ public class InscripcionesCursoPK implements Serializable {
         this.idcurso = idcurso;
     }
 
-    public Date getFechainscripcion() {
-        return fechainscripcion;
+    public Date getFechaInicio() {
+        return fechaInicio;
     }
 
-    public void setFechainscripcion(Date fechainscripcion) {
-        this.fechainscripcion = fechainscripcion;
+    public void setFechaInicio(Date fechaInicio) {
+        this.fechaInicio = fechaInicio;
     }
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (int) idalumno;
-        hash += (int) idcurso;
-        hash += (fechainscripcion != null ? fechainscripcion.hashCode() : 0);
+        int hash = 7;
+        hash = 97 * hash + this.idalumno;
+        hash = 97 * hash + this.idcurso;
+        hash = 97 * hash + Objects.hashCode(this.fechaInicio);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof InscripcionesCursoPK)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        InscripcionesCursoPK other = (InscripcionesCursoPK) object;
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final InscripcionesCursoPK other = (InscripcionesCursoPK) obj;
         if (this.idalumno != other.idalumno) {
             return false;
         }
         if (this.idcurso != other.idcurso) {
             return false;
         }
-        if ((this.fechainscripcion == null && other.fechainscripcion != null) || (this.fechainscripcion != null && !this.fechainscripcion.equals(other.fechainscripcion))) {
+        if (!Objects.equals(this.fechaInicio, other.fechaInicio)) {
             return false;
         }
         return true;
@@ -93,7 +99,7 @@ public class InscripcionesCursoPK implements Serializable {
 
     @Override
     public String toString() {
-        return "Modelo.InscripcionesCursoPK[ idalumno=" + idalumno + ", idcurso=" + idcurso + ", fechainscripcion=" + fechainscripcion + " ]";
+        return "InscripcionesCursoPK{" + "idalumno=" + idalumno + ", idcurso=" + idcurso + ", fechaInicio=" + fechaInicio + '}';
     }
     
 }

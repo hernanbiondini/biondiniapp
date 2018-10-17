@@ -1,10 +1,10 @@
-
 package controller;
 
 import Modelo.*;
 import Modelo.exceptions.NonexistentEntityException;
 import Modelo.exceptions.PreexistingEntityException;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -17,15 +17,31 @@ import javax.persistence.criteria.Root;
  *
  * @author hernanbiondini
  */
-public class ImparteCursoJpaController implements Serializable {
+public class ImparteCursoJpaController extends EntityController implements Serializable {
 
-    public ImparteCursoJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    private static ImparteCursoJpaController imparteCursoJpaController;
+
+    private ImparteCursoJpaController() {
     }
-    private EntityManagerFactory emf = null;
 
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
+    public static ImparteCursoJpaController getInstance() {
+        if (imparteCursoJpaController == null) {
+            imparteCursoJpaController = new ImparteCursoJpaController();
+        }
+        return imparteCursoJpaController;
+    }
+    
+    protected List executeNamedQuery(String queryName) {
+        EntityManager em = this.getEntityManager();
+        List resultList = this.executeNamedQuery(queryName, em);
+        em.close();
+        return resultList;
+    }
+
+    protected List executeNamedQuery(String queryName, EntityManager em) {
+        javax.persistence.Query query = em.createNamedQuery(queryName);
+        List resultList = query.getResultList();
+        return resultList;
     }
 
     public void create(ImparteCurso imparteCurso) throws PreexistingEntityException, Exception {
@@ -170,5 +186,15 @@ public class ImparteCursoJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    public ImparteCurso getPorIdCursoYFecha(Integer id, Date fechaDesde , Date fechaHasta) {
+        System.out.println("controller " + id);
+        EntityManager em = this.getEntityManager();
+        Query q = (Query) em.createQuery("SELECT i FROM ImparteCurso i WHERE i.imparteCursoPK.idcurso = ?1 and i.imparteCursoPK.fechaDesde = ?2 and i.imparteCursoPK.fechaHasta = ?3");
+        q.setParameter(1, id);
+        q.setParameter(2, fechaDesde);
+        q.setParameter(3, fechaHasta);
+        ImparteCurso al = (ImparteCurso) q.getSingleResult();
+        return al;
+    }
 }
